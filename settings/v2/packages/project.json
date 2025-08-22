@@ -1,0 +1,34 @@
+{
+  "__version__": "1.0.6",
+  "general": {
+    "designResolution": {
+      "width": 720,
+      "height": 1280,
+      "fitHeight": true
+    }
+  },
+  "physics": {
+    "collisionGroups": [
+      {
+        "index": 1,
+        "name": "hero"
+      },
+      {
+        "index": 2,
+        "name": "enemy"
+      }
+    ],
+    "collisionMatrix": {
+      "0": 6,
+      "1": 5,
+      "2": 3
+    }
+  },
+  "custom_joint_texture_layouts": [],
+  "layer": [
+    {
+      "name": "UI",
+      "value": 1
+    }
+  ]
+}
