@@ -1,6 +1,9 @@
-import { _decorator, Component, Node, Vec3, Prefab, instantiate, math, RigidBody2D, Vec2, director } from 'cc';
+import { _decorator, Component, Node, Vec3, Prefab, instantiate, math, RigidBody2D, Vec2, director, Sprite, UITransform, Animation, AnimationClip, animation, SpriteFrame } from 'cc';
 import { EnemyAttributes } from './EnemyAttributes';
 import { BulletController } from '../Weapon/BulletController';
+import { resourceManage } from '../../runtime/resourceManager';
+import { ANIMATION_SPEED, ENEMY_HEIGHT, ENEMY_WIDTH } from '../../utils/constant';
+import { renderEnemyClip } from '../../utils/renderEnemy';
 const { ccclass, property } = _decorator;
 
 /**
@@ -27,6 +30,10 @@ export class Enemy_Shoots extends Component {
     attributes: EnemyAttributes = new EnemyAttributes();
 
     private timer: number = 0;
+
+    protected onLoad(): void {
+        this.render();
+    }
 
     start() {
         this.timer = this.shootInterval;
@@ -87,6 +94,10 @@ export class Enemy_Shoots extends Component {
         console.log(`敌人发射子弹！攻击力: ${this.attributes.attack}`);
     }
 
+    async render() {
+        const spriteFrames = await resourceManage.loadShootingEnemy();
+        renderEnemyClip(this, spriteFrames);
+    }
 }
 
 
