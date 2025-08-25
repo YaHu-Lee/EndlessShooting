@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, Animation } from 'cc';
+import { _decorator, Component, Node, Animation, SpriteFrame, Texture2D, Sprite, UITransform } from 'cc';
 const { ccclass, property } = _decorator;
 
 /**
@@ -15,6 +15,13 @@ export class Animation_Control extends Component {
 
     onLoad() {
         this.animation = this.getComponent(Animation);
+    }
+
+    update() {
+        const spriteNode = this.node.getComponent(Sprite);
+        const spriteTexture = spriteNode.spriteFrame.texture;
+        const transform = this.getComponent(UITransform);
+        transform.setContentSize(spriteTexture.width / 3, spriteTexture.height / 3);
     }
 
     run() {
@@ -60,6 +67,10 @@ export class Animation_Control extends Component {
         }
         this.isDead = true;
         this.animation.play('hero_die');
+    }
+
+    get dead() {
+        return this.isDead;
     }
 }
 

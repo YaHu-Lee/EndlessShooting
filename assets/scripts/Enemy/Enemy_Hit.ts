@@ -3,6 +3,8 @@ import { EnemyAttributes } from './EnemyAttributes';
 import { Hero_Fight } from '../Hero/Hero_Fight';
 
 import { Hero } from '../Hero/Hero';
+import { resourceManage } from '../../runtime/resourceManager';
+import { renderEnemyClip } from '../../utils/renderEnemy';
 const { ccclass, property } = _decorator;
 
 @ccclass('Enemy_Hit')
@@ -21,6 +23,10 @@ export class Enemy_Hit extends Component {
 
     @property({ type: Number, tooltip: '攻击范围' })
     attackRange = 50;
+
+    protected onLoad(): void {
+        this.render();
+    }
 
     start() {
         if (!this.hero) {
@@ -58,6 +64,11 @@ export class Enemy_Hit extends Component {
     attack() {
         if (!this.hero) return;
         this.hero.getComponent(Hero_Fight).takeDamage(this.attributes.attack);
+    }
+
+    async render() {
+        const spriteFrames = await resourceManage.loadHittingEnemy();
+        renderEnemyClip(this, spriteFrames);
     }
 }
 

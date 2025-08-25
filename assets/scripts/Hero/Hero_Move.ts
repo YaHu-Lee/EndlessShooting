@@ -107,6 +107,7 @@ export class Hero_Move extends Component {
     }
 
     onKeyDown(event: any) {
+        if (this.animationControl.dead) return;
         console.log('Hero_Move: 键盘按下', event.keyCode);
         switch(event.keyCode) {
             case KeyCode.ARROW_LEFT:

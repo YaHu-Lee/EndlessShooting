@@ -18,6 +18,6 @@ export class Hero extends Hero_Move {
     }
 
     update(deltaTime: number) {
-        // 更新逻辑可按需添加
+      // 更新逻辑可按需添加
     }
 }
