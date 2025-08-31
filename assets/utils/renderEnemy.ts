@@ -1,4 +1,4 @@
-import { Animation, animation, AnimationClip, Component, Sprite, SpriteFrame, UITransform } from "cc";
+import { Animation, animation, AnimationClip, Component, rect, Sprite, SpriteFrame, UITransform } from "cc";
 import { ANIMATION_SPEED, ENEMY_HEIGHT, ENEMY_WIDTH } from "./constant";
 
 export function renderEnemyClip(that: Component, spriteFrames: any[]) {
