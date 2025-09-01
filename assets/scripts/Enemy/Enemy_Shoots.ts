@@ -1,9 +1,11 @@
-import { _decorator, Component, Node, Vec3, Prefab, instantiate, math, RigidBody2D, Vec2, director, Sprite, UITransform, Animation, AnimationClip, animation, SpriteFrame } from 'cc';
+import { _decorator, Component, Node, Vec3, Prefab, instantiate, math, RigidBody2D, Vec2, director, Sprite, UITransform, Animation, AnimationClip, animation, SpriteFrame, Asset, Texture2D, rect } from 'cc';
 import { EnemyAttributes } from './EnemyAttributes';
 import { BulletController } from '../Weapon/BulletController';
 import { resourceManage } from '../../runtime/resourceManager';
 import { ANIMATION_SPEED, ENEMY_HEIGHT, ENEMY_WIDTH } from '../../utils/constant';
 import { renderEnemyClip } from '../../utils/renderEnemy';
+import { SingleAnimation } from '../../utils/singleAnimation';
+import { commonBulletPath } from '../../utils';
 const { ccclass, property } = _decorator;
 
 /**
@@ -30,6 +32,8 @@ export class Enemy_Shoots extends Component {
     attributes: EnemyAttributes = new EnemyAttributes();
 
     private timer: number = 0;
+
+    bulletDestroySpriteFrames: SpriteFrame[];
 
     protected onLoad(): void {
         this.render();
@@ -59,36 +63,18 @@ export class Enemy_Shoots extends Component {
 
     shoot() {
         if (!this.hero || !this.bulletPrefab) return;
-
-        // 创建子弹
-        const bullet = instantiate(this.bulletPrefab);
-        bullet.setPosition(this.node.position);
-        this.node.parent?.addChild(bullet);
-
-        // 使用 Vec3 计算方向并转换为 Vec2
-        const heroPos = this.hero.position;
-        const enemyPos = this.node.position;
-        const directionVec3 = new Vec3(heroPos.x - enemyPos.x, heroPos.y - enemyPos.y, 0);
-        directionVec3.normalize();
-        const direction = new Vec2(directionVec3.x, directionVec3.y);
-
-        // 随机偏移角度
-        const randomAngle = (Math.random() - 0.5) * 2 * this.randomAngleRange;
-        const radians = math.toRadian(randomAngle);
-        const rotatedDirection = new Vec2(
-            direction.x * Math.cos(radians) - direction.y * Math.sin(radians),
-            direction.x * Math.sin(radians) + direction.y * Math.cos(radians)
+        const [bullet] = commonBulletPath(
+            this.bulletPrefab,
+            this.node,
+            this.hero,
+            this.randomAngleRange,
+            this.bulletSpeed
         );
-
-        // 设置子弹速度
-        const bulletRigidBody = bullet.getComponent(RigidBody2D); // 假设子弹有 RigidBody2D 组件
-        if (bulletRigidBody) {
-            bulletRigidBody.linearVelocity = rotatedDirection.multiplyScalar(this.bulletSpeed);
-        }
         // 设置子弹攻击力
         const bulletController = bullet.getComponent(BulletController);
         if (bulletController) {
             bulletController.attack = this.attributes.attack;
+            bulletController.bulletDestroySpriteFrames = this.bulletDestroySpriteFrames;
         }
 
         console.log(`敌人发射子弹！攻击力: ${this.attributes.attack}`);
@@ -97,6 +83,7 @@ export class Enemy_Shoots extends Component {
     async render() {
         const spriteFrames = await resourceManage.loadShootingEnemy();
         renderEnemyClip(this, spriteFrames);
+        this.bulletDestroySpriteFrames = await resourceManage.loadDir('exp2_0') as SpriteFrame[];
     }
 }
 

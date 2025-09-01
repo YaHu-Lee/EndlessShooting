@@ -1,4 +1,4 @@
-import { Asset, resources, SpriteFrame } from "cc";
+import { Asset, resources, SpriteFrame, Texture2D } from "cc";
 
 class ResourceManage {
 
@@ -6,6 +6,18 @@ class ResourceManage {
     return new Promise((resolve, reject) => {
       resources.loadDir(path, type, (err, assets) => {
         if (err) {
+          reject(err);
+          return;
+        }
+        resolve(assets);
+      })
+    })
+  }
+
+  loadImage(path: string) {
+    return new Promise((resolve, reject) => {
+      resources.load(path, (err, assets) => {
+        if(err) {
           reject(err);
           return;
         }
